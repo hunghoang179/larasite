@@ -6,12 +6,11 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 
-class CommentController extends BaseAdminController
-{
+class CommentController extends BaseAdminController {
+
     public $bodyClass = 'comment-controller', $routeLink = 'comments';
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
 
         $this->middleware('is_staff');
@@ -22,17 +21,15 @@ class CommentController extends BaseAdminController
         $this->_loadAdminMenu($this->routeLink);
     }
 
-    public function getIndex(Request $request, Comment $object)
-    {
+    public function getIndex(Request $request, Comment $object) {
         $this->_setBodyClass($this->bodyClass . ' comments-list-page');
         return $this->_viewAdmin('comments.index');
     }
 
-    public function postIndex(Request $request, Comment $object)
-    {
+    public function postIndex(Request $request, Comment $object) {
         /**
          * Paging
-         **/
+         * */
         $offset = $request->get('start', 0);
         $limit = $request->get('length', 10);
         $paged = ($offset + $limit) / $limit;
@@ -43,25 +40,24 @@ class CommentController extends BaseAdminController
         $records = [];
         $records["data"] = [];
 
-        /*Group actions*/
+        /* Group actions */
         if ($request->get('customActionType', null) == 'group_action') {
             \DB::beginTransaction();
-
             $records["customActionStatus"] = "danger";
             $records["customActionMessage"] = "Group action did not completed. Some error occurred.";
-            $ids = (array)$request->get('id', []);
+            $ids = (array) $request->get('id', []);
             $customActionValue = $request->get('customActionValue', 0);
             switch ($customActionValue) {
                 case 'deleted': {
-                    $result = ['error' => !$object->whereIn('id', $ids)->delete()];
-                    $object->whereIn('parent_id', $ids)->delete();
-                }
+                        $result = ['error' => !$object->whereIn('id', $ids)->delete()];
+                        $object->whereIn('parent_id', $ids)->delete();
+                    }
                     break;
                 default: {
-                    $result = $object->updateMultiple($ids, [
-                        'status' => $customActionValue,
-                    ], true);
-                }
+                        $result = $object->updateMultiple($ids, [
+                            'status' => $customActionValue,
+                                ], true);
+                    }
                     break;
             }
             if (!$result['error']) {
@@ -79,29 +75,29 @@ class CommentController extends BaseAdminController
         $orderBy = $request->get('order')[0]['column'];
         switch ($orderBy) {
             case 1: {
-                $orderBy = 'id';
-            }
+                    $orderBy = 'id';
+                }
                 break;
             case 2: {
-                $orderBy = 'name';
-            }
+                    $orderBy = 'name';
+                }
                 break;
             case 3: {
-                $orderBy = 'phone';
-            }
+                    $orderBy = 'phone';
+                }
                 break;
 
             case 4: {
-                $orderBy = 'email';
-            }
+                    $orderBy = 'email';
+                }
                 break;
             case 5: {
-                $orderBy = 'comment_to';
-            }
+                    $orderBy = 'comment_to';
+                }
                 break;
             default: {
-                $orderBy = 'created_at';
-            }
+                    $orderBy = 'created_at';
+                }
                 break;
         }
         $orderType = $request->get('order')[0]['dir'];
@@ -136,8 +132,8 @@ class CommentController extends BaseAdminController
 
             $commentTo = '<span class="label label-success label-sm">' . $row->comment_to . '</span>';
             $relatedObject = $row->getRelatedObject()
-                ->select(['title', 'slug', 'language_id'])
-                ->with('language')->first();
+                            ->select(['title', 'slug', 'language_id'])
+                            ->with('language')->first();
             if ($relatedObject) {
                 $relatedLink = '';
                 $relatedLanguageCode = $relatedObject->language;
@@ -147,30 +143,30 @@ class CommentController extends BaseAdminController
                 }
                 switch ($row->comment_to) {
                     case 'page': {
-                        $relatedLink = _getPageLink($relatedObject->slug, $relatedLanguageCode);
-                    }
+                            $relatedLink = _getPageLink($relatedObject->slug, $relatedLanguageCode);
+                        }
                         break;
                     case 'post': {
-                        $relatedLink = _getPostLink($relatedObject->slug, $relatedLanguageCode);
-                    }
+                            $relatedLink = _getPostLink($relatedObject->slug, $relatedLanguageCode);
+                        }
                         break;
                     case 'category': {
-                        $relatedLink = _getCategoryLinkWithParentSlugs($relatedObject->content_id, $relatedLanguageCode);
-                    }
+                            $relatedLink = _getCategoryLinkWithParentSlugs($relatedObject->content_id, $relatedLanguageCode);
+                        }
                         break;
                     case 'product': {
-                        $relatedLink = _getProductLink($relatedObject->slug, $relatedLanguageCode);
-                    }
+                            $relatedLink = _getProductLink($relatedObject->slug, $relatedLanguageCode);
+                        }
                         break;
                     case 'product-category': {
-                        $relatedLink = _getProductCategoryLinkWithParentSlugs($relatedObject->content_id, $relatedLanguageCode);
-                    }
+                            $relatedLink = _getProductCategoryLinkWithParentSlugs($relatedObject->content_id, $relatedLanguageCode);
+                        }
                         break;
                 }
                 $commentTo .= ' - <a href="' . $relatedLink . '" title="' . $relatedObject->title . '" target="_blank">' . $relatedObject->title . '</a>';
             }
 
-            /*Edit link*/
+            /* Edit link */
             $link = asset($this->adminCpAccess . '/' . $this->routeLink . '/edit/' . $row->id);
             $removeLink = asset($this->adminCpAccess . '/' . $this->routeLink . '/delete/' . $row->id);
 
@@ -195,8 +191,7 @@ class CommentController extends BaseAdminController
         return response()->json($records);
     }
 
-    public function postFastEdit(Request $request, Comment $object)
-    {
+    public function postFastEdit(Request $request, Comment $object) {
         $data = [
             'id' => $request->get('args_0', null),
             'global_title' => $request->get('args_1', null),
@@ -206,10 +201,9 @@ class CommentController extends BaseAdminController
         return response()->json($result, $result['response_code']);
     }
 
-    public function getEdit(Request $request, Comment $object, $id)
-    {
+    public function getEdit(Request $request, Comment $object, $id) {
         $item = $object->find($id);
-        /*No page with this id*/
+        /* No page with this id */
         if (!$item) {
             $this->_setFlashMessage('Item not exists.', 'error');
             $this->_showFlashMessages();
@@ -222,12 +216,11 @@ class CommentController extends BaseAdminController
         return $this->_viewAdmin('comments.edit', $this->dis);
     }
 
-    public function postEdit(Request $request, Comment $object, $id)
-    {
+    public function postEdit(Request $request, Comment $object, $id) {
         $data = $request->all();
 
         $item = $object->find($id);
-        /*No comment with this id*/
+        /* No comment with this id */
         if (!$item) {
             $this->_setFlashMessage('Item not exists.', 'error');
             $this->_showFlashMessages();
@@ -249,10 +242,9 @@ class CommentController extends BaseAdminController
         return redirect()->back();
     }
 
-    public function getReply(Request $request, Comment $object, $id)
-    {
+    public function getReply(Request $request, Comment $object, $id) {
         $item = $object->find($id);
-        /*No comment with this id*/
+        /* No comment with this id */
         if (!$item) {
             $this->_setFlashMessage('Item not exists.', 'error');
             $this->_showFlashMessages();
@@ -267,12 +259,11 @@ class CommentController extends BaseAdminController
         return $this->_viewAdmin('comments.edit', $this->dis);
     }
 
-    public function postReply(Request $request, Comment $object, $id)
-    {
+    public function postReply(Request $request, Comment $object, $id) {
         $data = $request->all();
 
         $item = $object->find($id);
-        /*No comment with this id*/
+        /* No comment with this id */
         if (!$item) {
             $this->_setFlashMessage('Item not exists.', 'error');
             $this->_showFlashMessages();
@@ -294,12 +285,12 @@ class CommentController extends BaseAdminController
         $this->_setFlashMessage($result['message'], 'success');
         $this->_showFlashMessages();
 
-        return redirect()->to($this->adminCpAccess.'/comments/edit/'.$result['object']->id);
+        return redirect()->to($this->adminCpAccess . '/comments/edit/' . $result['object']->id);
     }
 
-    public function deleteDelete(Request $request, Comment $object, $id)
-    {
+    public function deleteDelete(Request $request, Comment $object, $id) {
         $result = $object->deleteComment($id);
         return response()->json($result, $result['response_code']);
     }
+
 }

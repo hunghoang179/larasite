@@ -83,9 +83,9 @@ class CmsMenu {
             if ($defaultArgs['isAdminMenu'] == true) {
                 $child_args['isAdminMenu'] = true;
                 $output .= '<li class="sidebar-toggler-wrapper">
-										<div class="sidebar-toggler">
-										</div>
-									</li>';
+				<div class="sidebar-toggler">
+				</div>
+                            </li>';
             }
             $output .= $this->getMenuItems($child_args);
             // $output.= '<div class="clearfix"></div></'.$defaultArgs['containerTag'].'>'; //</ul>

@@ -17,7 +17,16 @@
     <!-- OTHER PLUGINS -->
     @yield('css')
     <!-- END OTHER PLUGINS -->
-
+    
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="/third_party/fonts/open-sans/font.css" rel="stylesheet">
+    <link href="/third_party/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/third_party/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/third_party/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/third_party/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link href="/third_party/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css"/>
+    <!-- END GLOBAL MANDATORY STYLES -->
+    
     <!-- BEGIN THEME LAYOUT STYLES -->
     <link href="/css/style.css" rel="stylesheet" type="text/css"/>
     <!-- END THEME LAYOUT STYLES -->
