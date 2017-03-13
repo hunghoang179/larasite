@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-    <div class="main-content">
+<div class="main-content">
         {!! $object->content !!}        
-    </div>
+</div>
 @endsection

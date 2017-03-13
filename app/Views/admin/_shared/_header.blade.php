@@ -15,13 +15,18 @@
     <div class="top-menu">
         <ul class="nav navbar-nav pull-right">
             @if(isset($unreadMailCount) && $unreadMailCount)
-                <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                    <a title="You have {{ $unreadMailCount }} unread mail(s) in inbox" href="{{ '/'.$adminCpAccess.'/contacts' }}" class="dropdown-toggle" style="padding-right: 10px;">
-                        <i class="icon-envelope-open"></i>
-                        <span class="badge badge-default">{{ $unreadMailCount }}</span>
-                    </a>
-                </li>
+            <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
+                <a title="You have {{ $unreadMailCount }} unread mail(s) in inbox" href="{{ '/'.$adminCpAccess.'/contacts' }}" class="dropdown-toggle" style="padding-right: 10px;">
+                    <i class="icon-envelope-open"></i>
+                    <span class="badge badge-default">{{ $unreadMailCount }}</span>
+                </a>
+            </li>
             @endif
+            <li class="dropdown dropdown-extended dropdown-user dropdown-dark dropdown-notification">
+                <a href="{{URL::to('/')}}" target="_blank" class="dropdown-toggle">
+                    <span class="username"><i class="fa fa-television" aria-hidden="true"></i> View site </span>
+                </a>
+            </li>
             <li class="dropdown dropdown-extended dropdown-user dropdown-dark dropdown-notification" id="header_notification_bar">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                     <span class="username"><i class="fa fa-plus"></i> Add new</span>

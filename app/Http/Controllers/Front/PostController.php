@@ -1,21 +1,21 @@
-<?php namespace App\Http\Controllers\Front;
+<?php
+
+namespace App\Http\Controllers\Front;
 
 use App\Models\Post;
 use App\Models\PostMeta;
 use Illuminate\Http\Request;
 
-class PostController extends BaseFrontController
-{
-    public function __construct()
-    {
+class PostController extends BaseFrontController {
+
+    public function __construct() {
         $this->showSidebar = true;
 
         parent::__construct();
         $this->bodyClass = 'post';
     }
 
-    public function _handle(Request $request, Post $object, PostMeta $objectMeta, $slug)
-    {
+    public function _handle(Request $request, Post $object, PostMeta $objectMeta, $slug) {
         $item = $object->getBySlug($slug, $this->currentLanguageId);
 
         if (!$item) {
@@ -25,7 +25,7 @@ class PostController extends BaseFrontController
         $this->_setCurrentEditLink('Edit this post', 'posts/edit/' . $item->id . '/' . $this->currentLanguageId);
 
         $relatedCategoryIds = $item->category()->getRelatedIds();
-        if($relatedCategoryIds) {
+        if ($relatedCategoryIds) {
             $relatedCategoryIds = $relatedCategoryIds->toArray();
         }
 
@@ -40,8 +40,7 @@ class PostController extends BaseFrontController
         return $this->_showItem($item);
     }
 
-    private function _showItem(Post $item)
-    {
+    private function _showItem(Post $item) {
         $page_template = $item->page_template;
         if (trim($page_template) != '') {
             $function = '_post_' . str_replace(' ', '', trim($page_template));
@@ -52,9 +51,9 @@ class PostController extends BaseFrontController
         return $this->_defaultItem($item);
     }
 
-    private function _defaultItem(Post $object)
-    {
+    private function _defaultItem(Post $object) {
         $this->_setBodyClass($this->bodyClass . ' post-default');
         return $this->_viewFront('post-templates.default', $this->dis);
     }
+
 }
